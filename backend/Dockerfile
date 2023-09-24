@@ -1,5 +1,5 @@
 FROM public.ecr.aws/lambda/nodejs:16
 
-COPY src ./
+COPY app.ts ./
 
 CMD ["app.handler"]

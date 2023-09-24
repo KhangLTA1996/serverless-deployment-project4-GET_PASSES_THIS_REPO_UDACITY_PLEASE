@@ -1,4 +1,4 @@
-# TODO: Change the name of the org 
+# TODO: Change the name of the org
 org: anhkhangle
 app: serverless-todo-app-prj4
 service: serverless-todo-app-prj4
@@ -6,65 +6,96 @@ frameworkVersion: '3.35.2'
 
 plugins:
   - serverless-webpack
+
   - serverless-iam-roles-per-function
+
   - serverless-plugin-tracing
 
 provider:
   name: aws
-  runtime: nodejs14.x
-  lambdaHashingVersion: '20201221'
+
+  runtime: nodejs16.x
+
+  # lambdaHashingVersion: '20201221'
 
   # stage: ${opt:stage, 'dev'}
+
   stage: dev
+
   # region: ${opt:region, 'us-east-1'}
+
   region: us-west-2
 
   tracing:
     lambda: true
+
     apiGateway: true
 
-  # Use these variables in the functions and resouorces section below. For example, 
+  # Use these variables in the functions and resouorces section below. For example,
+
   # ${self:provider.environment.ATTACHMENT_S3_BUCKET}
+
   environment:
     INDEX_NAME: defaultIndex
+
     # TODOS_TABLE: Todos-${self:provider.stage}
+
     TODOS_TABLE: Todo-prj4-table-${self:provider.stage}
+
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
+
     # ATTACHMENT_S3_BUCKET: serverless-c4-todo-images-${self:provider.stage}
+
     ATTACHMENT_S3_BUCKET: serverless-c4-todo-prj4-images-${self:provider.stage}
+
     SIGNED_URL_EXPIRATION: 300
 
   logs:
     # Enable API Gateway logs
-    restApi: 
+
+    restApi:
       accessLogging: true
+
       # Enable execution logging (default: true)
+
       executionLogging: true
+
       # Log level to use for execution logging: INFO or ERROR
+
       level: INFO
+
       # Log full requests/responses for execution logging (default: true)
+
       fullExecutionData: true
+
       # Existing IAM role to use for API Gateway when writing CloudWatch Logs (default: automatically created)
+
       role: arn:aws:iam::123456:role
+
       # Whether the API Gateway CloudWatch Logs role setting is not managed by Serverless (default: false)
+
       roleManagedExternally: false
 
   iam:
     role:
       statements:
         - Effect: Allow
+
           Action:
             - xray:PutTelemetryRecords
+
             - xray:PutTraceSegments
+
           Resource: "*"
 
-
 functions:
+  # main:
+  #   handler: app.main
 
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
-  # TODO: Configure this function - 
+  # TODO: Configure this function -
   # Provide iamRoleStatements property for performing Actions on DynamoDB
   # GetTodos:
   #   handler: src/lambda/http/getTodos.handler
@@ -75,10 +106,10 @@ functions:
   #         cors: true
   #         authorizer: Auth
 
-  # TODO: Configure this function - 
-  # Provide iamRoleStatements property. Decide the Actions and AWS Resource. 
+  # TODO: Configure this function -
+  # Provide iamRoleStatements property. Decide the Actions and AWS Resource.
   # To refer to an AWS resource defined in the "Resources" section, you can use "Resource: !GetAtt <resource-name>.Arn"
-  # To validate incoming HTTP requests, we have provided the request schemas in function definition below. 
+  # To validate incoming HTTP requests, we have provided the request schemas in function definition below.
   # CreateTodo:
   #   handler: src/lambda/http/createTodo.handler
   #   events:
@@ -122,7 +153,7 @@ functions:
     Resources:
     # Add necessary AWS resources. You will need at least the following AWS resources
     # TODO: Fill the properties
-    # Feel free to change the names as you like. 
+    # Feel free to change the names as you like.
     # GatewayResponseDefault4XX:
     #   Type: AWS::ApiGateway::GatewayResponse
     #   Properties:
@@ -132,7 +163,7 @@ functions:
     #     ResponseType: DEFAULT_4XX
     #     RestApiId:
     #       Ref: 'ApiGatewayRestApi'
-    
+
     # TODO: Create a DynamoDB table with local secondary index and a composite key
     # TodosTable:
     #   Type : AWS::DynamoDB::Table
@@ -161,7 +192,7 @@ functions:
     #         Projection:
     #           ProjectionType: ALL
 
-    # TODO: Complete the bucket properties below. 
+    # TODO: Complete the bucket properties below.
     # Do not forget to add the CorsConfiguration propoerty
     # AttachmentsBucket:
     #   Type: AWS::S3::Bucket
@@ -173,7 +204,7 @@ functions:
     # For cross referencing the name of the bucket, use "!Ref AttachmentsBucket"
     # BucketPolicy:
     #   Type: AWS::S3::BucketPolicy
-    #   Properties: 
+    #   Properties:
     #     Bucket: 'serverless-prj4-bucket'
     #     PolicyDocument:
     #       Version: 2012-10-17
