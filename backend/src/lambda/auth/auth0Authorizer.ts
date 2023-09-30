@@ -56,29 +56,29 @@ export const handler = async (
   }
 }
 
-// async function verifyJwk() {
-//   let getJwks = (cb: any) => {
-//     request({
-//       uri: jwksUrl,
-//       strictSSL: true,
-//       json: true
-//     }, (err, res) => {
-//       if (err || res.statusCode < 200 || res.statusCode >= 300) {
-//         if (res) {
-//           return cb({
-//             code: res.statusCode,
-//             message: `Http Error ${res.statusCode}: ` + res.statusMessage
-//           });
-//         }
-//         return cb(err);
-//       }
+async function verifyJwk() {
+  let getJwks = (cb: any) => {
+    request({
+      uri: jwksUrl,
+      strictSSL: true,
+      json: true
+    }, (err, res) => {
+      if (err || res.statusCode < 200 || res.statusCode >= 300) {
+        if (res) {
+          return cb({
+            code: res.statusCode,
+            message: `Http Error ${res.statusCode}: ` + res.statusMessage
+          });
+        }
+        return cb(err);
+      }
 
-//       let jwks = res.body.keys;
-//       return cb(null, jwks);
-//     });
-//   }
-//   return getJwks;
-// }
+      let jwks = res.body.keys;
+      return cb(null, jwks);
+    });
+  }
+  return getJwks;
+}
 
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const token = getToken(authHeader);
@@ -88,6 +88,7 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   // You should implement it similarly to how it was implemented for the exercise for the lesson 5
   // You can read more about how to do this here: https://auth0.com/blog/navigating-rs256-and-jwks/
   const jwkRetrieval = await fetch(jwksUrl).then((response: any) => response.json());
+  verifyJwk();
   let key = jwkRetrieval.find((key: any) => key.kid === jwt.header.kid);
   if (jwt.header.alg !== 'RS256') {
     throw new httpError.Unauthorized();
