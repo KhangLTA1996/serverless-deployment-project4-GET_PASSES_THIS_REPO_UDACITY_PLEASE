@@ -1,29 +1,26 @@
-import 'source-map-support/register';
+import 'source-map-support/register'
 
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import * as middy from 'middy';
-import { cors, httpErrorHandler } from 'middy/middlewares';
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import * as middy from 'middy'
+import { cors, httpErrorHandler } from 'middy/middlewares'
 
-import { FileStorage } from '../../helpers/attachmentUtils';
-
-let fileStorage = new FileStorage();
+import { createAttachmentPresignedUrl } from '../../businessLogic/todos'
+import { getUserId } from '../utils'
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const todoId = event.pathParameters.todoId
-    // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
-    let fetchAwsUrl = fileStorage.getUploadUrl(todoId);
+    const userId = getUserId(event);
+    const url = await createAttachmentPresignedUrl(userId, todoId);
+
     return {
-      statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
       },
-      body: JSON.stringify({
-        url: fetchAwsUrl
-      })
+      statusCode: 201,
+      body: JSON.stringify({ uploadUrl: url }),
     };
-    // return undefined
   }
 )
 
