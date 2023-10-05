@@ -294,10 +294,10 @@ resource:
         OwnershipControls:
           Rules:
             - ObjectOwnership: ObjectWriter
-          PublicAccessBlockConfiguration:
-            BlockPublicAcls: false
-            BlockPublicPolicy: false
-            IgnorePublicAcls: false
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: false
         CorsConfiguration:
           CorsRules:
             - AllowedOrigins:
