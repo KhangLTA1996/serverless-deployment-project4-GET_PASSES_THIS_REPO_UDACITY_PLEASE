@@ -9,7 +9,7 @@ import { JwtPayload } from '../../auth/JwtPayload'
 
 const logger = createLogger('auth')
 
-const jwksUrl = 'https://dev-5ifybf6o7crps5in.us.auth0.com/.well-known/jwks.json'
+const jwksUrl = 'https://dev-z040eegdv0z0nnhw.us.auth0.com/.well-known/jwks.json'
 
 export const handler = async (
   event: CustomAuthorizerEvent
@@ -66,8 +66,13 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   });
   const keys = _res.data.keys;
   console.log('Token',_res.data, jwt);
+  logger.info('Token123' + _res.data + ' and ' +  jwt, jwt);
+  console.log('Token12345 ' + _res.data + ' and ' +  jwt);
+  console.log("keys =>>>>>", _res.data.keys);
+  console.log("jwt kid =>>>>>",  jwt?.header?.kid);
 
-  const signKeys = keys.find(key => key.kid === jwt?.header?.kid);
+  const signKeys = keys.find((key: any) => key.kid === jwt.header.kid);
+  console.log("signKeys =>>>>>", JSON.stringify(signKeys));
 
   if(!signKeys) throw new Error("Incorrect Keys");
   const pemDT = signKeys.x5c[0];
@@ -80,6 +85,7 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
 }
 
 function getToken(authHeader: string): string {
+  console.log(' adasdasd ' +  authHeader);
   if (!authHeader) throw new Error('No authentication header')
 
   if (!authHeader.toLowerCase().startsWith('bearer '))
@@ -87,6 +93,5 @@ function getToken(authHeader: string): string {
   
   const split = authHeader.split(' ')
   const token = split[1]
-  console.log(token)
   return token
 }

@@ -5,7 +5,6 @@ import { createLogger } from "../utils/logger";
 import { TodoItem } from "../models/TodoItem";
 import { TodoUpdate } from "../models/TodoUpdate";
 
-
 const XAWS = AWSXRay.captureAWS(AWS);
 const logger = createLogger("TodoAccess");
 const url_expiration = process.env.SIGNED_URL_EXPIRATION;
@@ -35,8 +34,6 @@ export class TodosAccess {
     return resuslt.Items as TodoItem[];
   }
 
-
-
   async createClient(item: TodoItem): Promise<TodoItem> {
     await this.docClient
       .put({
@@ -46,8 +43,6 @@ export class TodosAccess {
       .promise();
     return item as TodoItem;
   }
-
-
 
   async updateClient(
     userId: string,
