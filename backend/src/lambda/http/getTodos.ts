@@ -5,8 +5,6 @@ import { cors, httpErrorHandler } from "middy/middlewares";
 import { getTodosForUser as getTodosForUser } from "../../businessLogic/todos";
 import { getUserId } from "../utils";
 
-//------------------------------------------------------------------------------------------------
-
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
@@ -17,17 +15,17 @@ export const handler = middy(
         body: JSON.stringify({ items: todos }),
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Credentials": true
         },
       };
-    } catch (error) {
+    } catch (exception) {
       return {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Credentials": true
         },
         statusCode: 500,
-        body: JSON.stringify({ error: error }),
+        body: JSON.stringify({ message: exception })
       };
     }
   }
