@@ -10,9 +10,7 @@ export async function getTodos(idToken: string): Promise<Todo[]> {
   const response = await Axios.get(`${apiEndpoint}/todos`, {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`,
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true
+      'Authorization': `Bearer ${idToken}`
     },
   })
   console.log('Todos:', response.data)
