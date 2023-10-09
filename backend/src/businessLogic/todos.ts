@@ -1,6 +1,6 @@
 import {
   TodosAccess
-} from "./todosAccess";
+} from "../dataLayer/todosAccess";
 import {
   TodoItem
 } from "../models/TodoItem";
